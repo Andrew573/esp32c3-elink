@@ -12,6 +12,8 @@
 int temp_i[10];
 int humi_i[10];
 int cnt __attribute__((section(".rtc.data")));
+int last_temp __attribute__((section(".rtc.data")));
+int last_humi __attribute__((section(".rtc.data")));
 
 int get_avg(int *a, int n)
 {
@@ -46,6 +48,22 @@ void setup() {
   my_espnow_send(temp);
   my_espnow_send(humi);
 
+  if(last_humi != humi || last_temp != temp)
+  {
+    elink3_setup();
+    elink_set_temp(temp);
+    elink_set_humi(humi);
+    elink_display_all();
+    //elink_display_int(110, 20, temp);
+    //elink_display_int(110, 40, humi);
+  }
+  else
+  {
+    my_espnow_send("not need flash");
+  }
+  last_humi = humi;
+  last_temp = temp;
+
 	Serial.println("setup done");
   my_espnow_send("setup done");
 
@@ -53,7 +71,7 @@ void setup() {
   
   esp_now_deinit();
   // 设置深度睡眠的时间（单位：秒）
-  esp_sleep_enable_timer_wakeup(30 * 1000 * 1000); // 60 seconds
+  esp_sleep_enable_timer_wakeup(90 * 1000 * 1000); // 60 seconds
   esp_deep_sleep_start();
 }
 

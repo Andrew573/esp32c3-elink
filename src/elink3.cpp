@@ -62,11 +62,12 @@ void elink3_setup()
   u8g2Fonts.setFontDirection(0);        // 从左到右（这是默认设置）
   u8g2Fonts.setForegroundColor(heise);  // 设置前景色
   u8g2Fonts.setBackgroundColor(baise);  // 设置背景色
-  u8g2Fonts.setFont(u8g2_font_t0_15_tf);
+  //u8g2Fonts.setFont(u8g2_font_t0_15_tf);
 
   //display.setRotation(ScreenOrientation); // 设置方向
   //display.firstPage();
-  
+
+#if 0
   do{
       //display.setCursor(32, 100);
       display.setCursor(0, 150);
@@ -74,7 +75,7 @@ void elink3_setup()
       display.display();
   } while (display.nextPage());
   Serial.print("elink_hello_world");
-
+#endif
   // jpeg图像可以按1、2、4或8的比例缩放
   //TJpgDec.setJpgScale(1);
   //TJpgDec.setSwapBytes(0);//我们需要交换颜色字节（字节次序 ）
@@ -85,6 +86,43 @@ void elink3_setup()
   //SPIFFS.begin(true);
   //Serial.println("\r\n初始化已完成.");
 
+}
+
+char time_str[20] = "12:56";
+int elink_temp = 0;
+int elink_humi = 0;
+
+void elink_set_time(char *str)
+{
+  strcpy(time_str, str);
+}
+
+void elink_set_temp(int temp)
+{
+  elink_temp = temp;
+}
+
+void elink_set_humi(int humi)
+{
+  elink_humi = humi;
+}
+
+void elink_display_all()
+{
+  do{
+      u8g2Fonts.setFont(u8g2_font_t0_15_tf);
+      display.setCursor(0, 150);
+      display.print(time_str);
+
+      display.setFont(&FreeSansBold9pt7b);
+      display.setCursor(110, 20);
+      display.print(elink_temp);
+
+      display.setCursor(110, 40);
+      display.print(elink_humi);
+
+      display.display();
+  } while (display.nextPage());
 }
 
 void elink_display_int(int16_t x, int16_t y, int i)

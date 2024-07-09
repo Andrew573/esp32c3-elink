@@ -4,6 +4,11 @@
 #include <Arduino.h>
 
 void elink3_setup();
+void elink_set_time(char *str);
+void elink_set_temp(int temp);
+void elink_set_humi(int humi);
+void elink_display_all();
+
 void elink3_loop();
 void loadFile(String name);
 void clearScreen();
