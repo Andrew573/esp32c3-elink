@@ -8,6 +8,8 @@
 #include "elink3.h"
 #include "my_espnow.h"
 #include "my_aht20.h"
+#include "user_wifi.h"
+#include "onenet.h"
 
 int temp_i[10];
 int humi_i[10];
@@ -28,13 +30,16 @@ void setup() {
 	Serial.begin(115200);
   Serial.println("setup start");
 
-  my_espnow_init();
-  my_espnow_send("setup start");
-  my_espnow_send(cnt);
+  //my_espnow_init();
+  //my_espnow_send("setup start");
+  //my_espnow_send(cnt);
   cnt += 1;
 
 	//elink3_setup();
 	aht20_init();
+  setupWifi();
+  //my_espnow_send("wifi done");
+  onenet_init();
 
   for(int i = 0; i < 10; i++)
   {
@@ -45,33 +50,40 @@ void setup() {
 
   int temp = get_avg(temp_i, 10);
   int humi = get_avg(humi_i, 10);
-  my_espnow_send(temp);
-  my_espnow_send(humi);
+  //my_espnow_send(temp);
+  //my_espnow_send(humi);
 
-  if(last_humi != humi || last_temp != temp)
+  /*if(last_humi != humi || last_temp != temp)
   {
     elink3_setup();
     elink_set_temp(temp);
     elink_set_humi(humi);
-    elink_display_all();
-    //elink_display_int(110, 20, temp);
-    //elink_display_int(110, 40, humi);
+    elink_display_all(); 
   }
   else
   {
-    my_espnow_send("not need flash");
+    //my_espnow_send("not need flash");
   }
-  last_humi = humi;
-  last_temp = temp;
+  */
 
-	Serial.println("setup done");
-  my_espnow_send("setup done");
 
-  delay(1000);
-  
-  esp_now_deinit();
+  //my_espnow_send("onenet done");
+  sendTempAndHumi(humi);
+  sendTempAndTemp(temp);
+  //my_espnow_send("upload done");
+
+  //delay(2000);
+
+  WiFi.mode(WIFI_OFF);
+  //last_humi = humi;
+  //last_temp = temp;
+
+	//Serial.println("setup done");
+  //my_espnow_send("setup done");
+
+  //esp_now_deinit();
   // 设置深度睡眠的时间（单位：秒）
-  esp_sleep_enable_timer_wakeup(90 * 1000 * 1000); // 60 seconds
+  esp_sleep_enable_timer_wakeup(300 * 1000 * 1000); // 60 seconds
   esp_deep_sleep_start();
 }
 

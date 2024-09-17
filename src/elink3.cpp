@@ -35,7 +35,8 @@ GxEPD2_3C<GxEPD2_154_Z90c, GxEPD2_154_Z90c::HEIGHT> display(GxEPD2_154_Z90c(/*CS
 #include "../.pio/libdeps/esp32-c3-devkitm-1/Adafruit GFX Library/Fonts/FreeSansBold24pt7b.h"
 //#include "../.pio/libdeps/esp32-c3-devkitm-1/Adafruit GFX Library/Fonts/FreeSansBold40pt7b.h"
 
-#include "../.pio/libdeps/esp32-c3-devkitm-1/Adafruit GFX Library/Fonts/FreeSansBold9pt7b.h"
+//#include "../.pio/libdeps/esp32-c3-devkitm-1/Adafruit GFX Library/Fonts/FreeSansBold9pt7b.h"
+#include "../.pio/libdeps/esp32-c3-devkitm-1/Adafruit GFX Library/Fonts/FreeMono9pt7b.h"
 
 void elink3_setup()
 {
@@ -49,7 +50,7 @@ void elink3_setup()
   display.init(115200);
 
     Serial.println("enter elink_hello_world");
-    display.setRotation(2);
+    display.setRotation(0);
     display.firstPage();
 
     display.setTextColor(GxEPD_BLACK);
@@ -88,7 +89,7 @@ void elink3_setup()
 
 }
 
-char time_str[20] = "12:56";
+char time_str[20] = "12:56℃";
 int elink_temp = 0;
 int elink_humi = 0;
 
@@ -114,11 +115,11 @@ void elink_display_all()
       display.setCursor(0, 150);
       display.print(time_str);
 
-      display.setFont(&FreeSansBold9pt7b);
-      display.setCursor(110, 20);
+      display.setFont(&FreeMono9pt7b);
+      display.setCursor(0, 20);
       display.print(elink_temp);
 
-      display.setCursor(110, 40);
+      display.setCursor(0, 40);
       display.print(elink_humi);
 
       display.display();
@@ -127,7 +128,8 @@ void elink_display_all()
 
 void elink_display_int(int16_t x, int16_t y, int i)
 {
-  display.setFont(&FreeSansBold9pt7b);
+  display.setFont(&FreeMono9pt7b);
+  
   do{
       //display.setCursor(32, 100);
       display.setCursor(x, y);
